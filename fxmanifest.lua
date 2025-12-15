@@ -24,6 +24,7 @@ shared_scripts {
 server_scripts {
     'entrypoint.js',
     'resource/sv_main.lua', --must run first
+    'resource/sv_callback.lua',
     'resource/sv_admins.lua',
     'resource/sv_logger.lua',
     'resource/sv_resources.lua',
@@ -43,6 +44,7 @@ server_scripts {
 
 client_scripts {
     'resource/cl_main.lua',
+    'resource/cl_callback.lua',
     'resource/cl_logger.lua',
     'resource/cl_playerlist.lua',
     'resource/menu/client/cl_webpipe.lua',

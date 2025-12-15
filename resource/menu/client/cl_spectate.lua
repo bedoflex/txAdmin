@@ -264,6 +264,10 @@ end)
 
 -- Client-side event handler for an authorized spectate request
 RegisterNetEvent('txcl:spectate:start', function(targetServerId, targetCoords)
+    if not DoesPlayerHavePerm('players.spectate') then
+        return sendSnackbarMessage('error', 'nui_menu.misc.no_perms', true)
+    end
+    
     if IS_REDM then
         redmPromptTitle = CreateVarString(10, 'LITERAL_STRING', 'Spectate')
         redmInstructionGroup = makeRedmInstructionalGroup(keysTable)

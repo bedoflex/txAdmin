@@ -22,3 +22,7 @@ function PlayerHasTxPermission(source, reqPerm)
       source, reqPerm, (allow and '^2true' or '^1false')))
   return allow
 end
+
+RegisterServerCallback('txsv:cb:checkPermission', function(source, reqPerm)
+  return PlayerHasTxPermission(source, reqPerm)
+end)

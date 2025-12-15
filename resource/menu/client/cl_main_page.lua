@@ -16,7 +16,7 @@ RegisterSecureNuiCallback('tpToCoords', function(data, cb)
 end)
 RegisterCommand('txAdmin:menu:tpToCoords', function()
     if not menuIsAccessible then return end
-    if not DoesPlayerHavePerm(menuPermissions, 'players.teleport') then
+    if not DoesPlayerHavePerm('players.teleport') then
         return sendSnackbarMessage('error', 'nui_menu.misc.no_perms', true)
     end
     toggleMenuVisibility(true)
@@ -32,7 +32,7 @@ end
 RegisterSecureNuiCallback('tpToWaypoint', reqTpToWaypoint)
 RegisterCommand('txAdmin:menu:tpToWaypoint', function()
     if not menuIsAccessible then return end
-    if not DoesPlayerHavePerm(menuPermissions, 'players.teleport') then
+    if not DoesPlayerHavePerm('players.teleport') then
         return sendSnackbarMessage('error', 'nui_menu.misc.no_perms', true)
     end
     reqTpToWaypoint()
@@ -50,7 +50,7 @@ end
 RegisterSecureNuiCallback('tpBack', reqTpBack)
 RegisterCommand('txAdmin:menu:tpBack', function()
     if not menuIsAccessible then return end
-    if not DoesPlayerHavePerm(menuPermissions, 'players.teleport') then
+    if not DoesPlayerHavePerm('players.teleport') then
         return sendSnackbarMessage('error', 'nui_menu.misc.no_perms', true)
     end
     reqTpBack()
@@ -82,7 +82,7 @@ RegisterSecureNuiCallback('clearArea', function(radius, cb)
 end)
 RegisterCommand('txAdmin:menu:clearArea', function()
     if not menuIsAccessible then return end
-    if not DoesPlayerHavePerm(menuPermissions, 'menu.clear_area') then
+    if not DoesPlayerHavePerm('menu.clear_area') then
         return sendSnackbarMessage('error', 'nui_menu.misc.no_perms', true)
     end
     toggleMenuVisibility(true)
@@ -117,7 +117,7 @@ end
 RegisterSecureNuiCallback('healMyself', reqHealMyself)
 RegisterCommand('txAdmin:menu:healMyself', function()
     if not menuIsAccessible then return end
-    if not DoesPlayerHavePerm(menuPermissions, 'players.heal') then
+    if not DoesPlayerHavePerm('players.heal') then
         return sendSnackbarMessage('error', 'nui_menu.misc.no_perms', true)
     end
     reqHealMyself()
@@ -275,6 +275,10 @@ end)
 
 -- Teleport to the current waypoint
 RegisterNetEvent('txcl:tpToWaypoint', function()
+    if not DoesPlayerHavePerm('players.teleport') then
+        return sendSnackbarMessage('error', 'nui_menu.misc.no_perms', true)
+    end
+    
     if not IsWaypointActive() then
         return sendSnackbarMessage('error', 'nui_menu.page_main.teleport.waypoint.error', true)
     end

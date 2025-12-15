@@ -126,18 +126,14 @@ end
 ---@param perms table Array of all player permissions
 ---@param perm string The specific permission
 ---@return boolean
-function DoesPlayerHavePerm(perms, perm)
-    if type(perms) ~= 'table' then
+function DoesPlayerHavePerm(perm)
+    local hasPerm = TriggerServerCallback('txsv:cb:checkPermission', perm)
+
+    if hasPerm then
+        return true
+    else
         return false
     end
-
-    for _, v in pairs(perms) do
-        if v == perm or v == 'all_permissions' then
-            return true
-        end
-    end
-
-    return false
 end
 
 -- Sound libraries

@@ -202,7 +202,7 @@ end)
 
 RegisterCommand('txAdmin:menu:togglePlayerIDs', function()
     if not menuIsAccessible then return end
-    if not DoesPlayerHavePerm(menuPermissions, 'menu.viewids') then
+    if not DoesPlayerHavePerm('menu.viewids') then
         return sendSnackbarMessage('error', 'nui_menu.misc.no_perms', true)
     end
     togglePlayerIDsHandler()

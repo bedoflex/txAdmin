@@ -243,7 +243,7 @@ end
 -- NoClip toggle keybind
 RegisterCommand('txAdmin:menu:noClipToggle', function()
     if not menuIsAccessible then return end
-    if not DoesPlayerHavePerm(menuPermissions, 'players.playermode') then
+    if not DoesPlayerHavePerm('players.playermode') then
         return sendSnackbarMessage('error', 'nui_menu.misc.no_perms', true)
     end
     askChangePlayerMode(noClipEnabled and 'none' or 'noclip')
@@ -257,6 +257,10 @@ end)
 
 -- [[ Player mode changed cb event ]]
 RegisterNetEvent('txcl:setPlayerMode', function(mode, ptfx)
+    if not DoesPlayerHavePerm('players.playermode') then
+        return sendSnackbarMessage('error', 'nui_menu.misc.no_perms', true)
+    end
+
     if ptfx then
         CreatePlayerModePtfxLoop(PlayerPedId(), true)
     end

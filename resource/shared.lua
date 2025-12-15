@@ -104,3 +104,9 @@ end
 function GetPedHealthPercent(ped)
   return math.floor((GetEntityHealth(ped) / GetEntityMaxHealth(ped)) * 100)
 end
+
+
+
+--- Shared callback event names
+eventReq = 'tx:internal:cb:req'
+eventRes = 'tx:internal:cb:res'

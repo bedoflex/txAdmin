@@ -138,7 +138,7 @@ RegisterSecureNuiCallback('spawnVehicle', function(data, cb)
 end)
 RegisterCommand('txAdmin:menu:spawnVehicle', function()
     if not menuIsAccessible then return end
-    if not DoesPlayerHavePerm(menuPermissions, 'menu.vehicle') then
+    if not DoesPlayerHavePerm('menu.vehicle') then
         return sendSnackbarMessage('error', 'nui_menu.misc.no_perms', true)
     end
     toggleMenuVisibility(true)
@@ -159,7 +159,7 @@ end
 RegisterSecureNuiCallback('deleteVehicle', reqVehicleDelete)
 RegisterCommand('txAdmin:menu:deleteVehicle', function()
     if not menuIsAccessible then return end
-    if not DoesPlayerHavePerm(menuPermissions, 'menu.vehicle') then
+    if not DoesPlayerHavePerm('menu.vehicle') then
         return sendSnackbarMessage('error', 'nui_menu.misc.no_perms', true)
     end
     reqVehicleDelete()
@@ -177,7 +177,7 @@ end
 RegisterSecureNuiCallback('fixVehicle', reqVehicleFix)
 RegisterCommand('txAdmin:menu:fixVehicle', function()
     if not menuIsAccessible then return end
-    if not DoesPlayerHavePerm(menuPermissions, 'menu.vehicle') then
+    if not DoesPlayerHavePerm('menu.vehicle') then
         return sendSnackbarMessage('error', 'nui_menu.misc.no_perms', true)
     end
     reqVehicleFix()
@@ -195,7 +195,7 @@ end
 RegisterSecureNuiCallback('boostVehicle', reqVehicleBoost)
 RegisterCommand('txAdmin:menu:boostVehicle', function()
     if not menuIsAccessible then return end
-    if not DoesPlayerHavePerm(menuPermissions, 'menu.vehicle') then
+    if not DoesPlayerHavePerm('menu.vehicle') then
         return sendSnackbarMessage('error', 'nui_menu.misc.no_perms', true)
     end
     reqVehicleBoost()

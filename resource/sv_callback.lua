@@ -8,7 +8,8 @@ RegisterNetEvent(eventReq, function(name, requestId, ...)
     local src = source
     local cb = registeredCallbacks[name]
     if cb then
-        local result = cb(src, ...)
-        TriggerClientEvent(eventRes, src, requestId, result)
+        local result = { cb(src, ...) }
+        
+        TriggerClientEvent(eventRes, src, requestId, table.unpack(result))
     end
 end)

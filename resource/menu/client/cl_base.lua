@@ -90,11 +90,10 @@ end)
 if not TX_MENU_ENABLED then return end
 
 -- Checking with server if we are an admin
-TriggerServerEvent('txsv:checkIfAdmin')
-
--- Triggered as callback of txsv:checkIfAdmin
-RegisterNetEvent('txcl:setAdmin', function(username, perms, rejectReason)
-  if type(perms) == 'table' then
+function checkIfAdmin() 
+  local username, perms, rejectReason = TriggerServerCallback('txsv:cb:checkPerms')
+  print(username, perms, rejectReason)
+  if username and perms and type(perms) == "table" then
     debugPrint("^2[AUTH] logged in as '" .. username .. "' with perms: " .. json.encode(perms or "nil"))
     menuIsAccessible = true
     menuPermissions = perms
@@ -125,8 +124,11 @@ RegisterNetEvent('txcl:setAdmin', function(username, perms, rejectReason)
     menuPermissions = {}
   end
   sendMenuMessage('setPermissions', menuPermissions)
-end)
+end
 
+CreateThread(function()
+  checkIfAdmin()
+end)
 
 --[[ Debug Events / Commands ]]
 -- Command/event to trigger a authentication attempt
@@ -135,7 +137,7 @@ local function retryAuthentication()
   menuIsAccessible = false
   menuPermissions = {}
   sendMenuMessage('setPermissions', menuPermissions)
-  TriggerServerEvent('txsv:checkIfAdmin')
+  checkIfAdmin()
 end
 RegisterNetEvent('txcl:reAuth', retryAuthentication)
 RegisterCommand('txAdmin-reauth', function()

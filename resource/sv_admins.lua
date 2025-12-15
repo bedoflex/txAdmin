@@ -27,25 +27,25 @@ local function handleAuthFail(src, reason)
     failedAuths[srcString] = GetGameTimer()
     reason = reason or "unknown"
     debugPrint("Auth rejected #"..srcString.." ("..reason..")")
-    TriggerClientEvent('txcl:setAdmin', src, false, false, reason)
     TriggerEvent('txAdmin:events:adminAuth', {
         netid = src,
         isAdmin = false,
     })
+    return nil, nil, reason
 end
 
--- Handle menu auth requests
-RegisterNetEvent('txsv:checkIfAdmin', function()
+RegisterServerCallback('txsv:cb:checkPerms', function(source)
     local src = source
     local srcString = tostring(source)
+    local p = promise.new()
+
     debugPrint('Handling authentication request from player #'..srcString)
 
-    -- Rate Limiter
     if type(failedAuths[srcString]) == 'number' and failedAuths[srcString] + attemptCooldown > GetGameTimer() then
-        return handleAuthFail(source, "too many auth attempts")
+        p:resolve({handleAuthFail(source, "too many auth attempts")})
+        return table.unpack(Citizen.Await(p))
     end
 
-    -- Prepping http request
     local url = "http://"..TX_LUACOMHOST.."/auth/self"
     local headers = {
         ['Content-Type'] = 'application/json',
@@ -53,24 +53,24 @@ RegisterNetEvent('txsv:checkIfAdmin', function()
         ['X-TxAdmin-Identifiers'] = table.concat(GetPlayerIdentifiers(src), ',')
     }
 
-    -- Making http request
     PerformHttpRequest(url, function(httpCode, data, resultHeaders)
-        -- Validating response
         local resp = json.decode(data)
         if not resp then
-            return handleAuthFail(src, "invalid response")
+            p:resolve({handleAuthFail(src, "invalid response")})
+            return
         end
         if resp.logout ~= nil and resp.logout then
-            return handleAuthFail(src, resp.reason or 'unknown reject reason')
+            p:resolve({handleAuthFail(src, resp.reason or 'unknown reject reason')})
+            return
         end
         if type(resp.name) ~= "string" then
-            return handleAuthFail(src, "invalid response")
+            p:resolve({handleAuthFail(src, "invalid response")})
+            return
         end
         if type(resp.permissions) ~= 'table' then
             resp.permissions = {}
         end
 
-        -- Setting up admin
         local adminTag = "[#"..src.."] "..resp.name
         debugPrint(("^2Authenticated admin ^5%s^2 with permissions: %s"):format(
             src,
@@ -84,13 +84,19 @@ RegisterNetEvent('txsv:checkIfAdmin', function()
             bucket = 0
         }
         sendInitialPlayerlist(src)
-        TriggerClientEvent('txcl:setAdmin', src, resp.name, resp.permissions)
         TriggerEvent('txAdmin:events:adminAuth', {
             netid = src,
             isAdmin = true,
             username = resp.name,
         })
+        
+        p:resolve({resp.name, resp.permissions, nil})
+        
     end, 'GET', '', headers)
+    
+    local result = Citizen.Await(p)
+    
+    return table.unpack(result)
 end)
 
 
